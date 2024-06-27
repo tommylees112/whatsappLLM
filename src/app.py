@@ -18,7 +18,11 @@ def webhook() -> str:
     incoming_msg = request.values.get("Body", "").strip()
     logging.debug(f"Received message: {incoming_msg}")
 
-    if incoming_msg.startswith("@summarise"):
+    if (
+        (incoming_msg.startswith("@summarise"))
+        or (incoming_msg.startswith("@summarize"))
+        or (incoming_msg.startswith("@summ"))
+    ):
         # initialize the messages
         response = MessagingResponse()
         message = response.message()

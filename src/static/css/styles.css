@@ -98,3 +98,8 @@ body {
 .mastfoot {
   color: rgba(255, 255, 255, .5);
 }
+
+/* Additional styles for the footer icons */
+.fab i {
+  font-size: 10rem; /* Adjust this value to make the icons larger or smaller */
+}

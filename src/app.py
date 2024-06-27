@@ -1,5 +1,5 @@
 from src.summariser import summarise_webpage
-from flask import Flask, request
+from flask import Flask, request, render_template
 from twilio.twiml.messaging_response import MessagingResponse
 from dotenv import load_dotenv
 import logging
@@ -11,6 +11,11 @@ logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s",
 )
+
+
+@app.route("/", methods=["GET"])
+def homepage():
+    return render_template("index.html")
 
 
 @app.route("/webhook", methods=["POST"])
@@ -49,4 +54,4 @@ if __name__ == "__main__":
     load_dotenv()
 
     # run the app
-    app.run(debug=True)
+    app.run()

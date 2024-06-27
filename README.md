@@ -17,6 +17,8 @@ Deployed [here](https://stormy-fortress-61944-2c1ff9dc107f.herokuapp.com/) on He
 - [Heroku](https://dashboard.heroku.com/apps/stormy-fortress-61944)
 - [Twilio Whatsapp Senders](https://console.twilio.com/us1/develop/sms/senders/whatsapp-senders/XE2357b321ff41b31f05ca6b44fd626c5d)
 - [Twilio SMS Logs](https://console.twilio.com/us1/monitor/logs/sms)
+- [Meta Whatsapp Business Homepage](https://business.facebook.com/settings/info?business_id=965893078343863)
+- [Cohere dashboard](https://dashboard.cohere.com/api-keys)
 
 ## Setup
 

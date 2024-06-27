@@ -13,7 +13,6 @@ blinker == 1.8.2
 boto3 == 1.34.132
 botocore == 1.34.132
 brotli == 1.1.0
-bzip2 == 1.0.8
 ca-certificates == 2024.6.2
 certifi == 2024.6.2
 charset-normalizer == 3.3.2

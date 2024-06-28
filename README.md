@@ -11,6 +11,10 @@ This project is a WhatsApp chatbot that uses the Cohere Command R+ model to summ
 ## Deployment
 
 Deployed [here](https://stormy-fortress-61944-2c1ff9dc107f.herokuapp.com/) on Heroku.
+```
+
+heroku addons:info redis-pointy-97986
+```
 
 ## Monitoring
 
@@ -50,3 +54,13 @@ heroku ps
    ngrok http 5000
    ```   
    
+4. Start the redis broker and check it 
+   ```bash
+   brew services start redis
+   redis-cli ping
+   ```
+
+5. Start the celeery worker
+   ```
+   celery -A src.app.celery worker --loglevel=info
+   ```

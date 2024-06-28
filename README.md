@@ -20,6 +20,12 @@ Deployed [here](https://stormy-fortress-61944-2c1ff9dc107f.herokuapp.com/) on He
 - [Meta Whatsapp Business Homepage](https://business.facebook.com/settings/info?business_id=965893078343863)
 - [Cohere dashboard](https://dashboard.cohere.com/api-keys)
 
+Check heroku status
+```bash
+heroku logs --tail
+heroku ps
+```
+
 ## Setup
 
 1. Clone the repository:

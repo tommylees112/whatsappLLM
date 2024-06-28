@@ -23,3 +23,10 @@ def get_html_from_url(url: str):
     text = soup.text
 
     return text
+
+
+def format_elapsed_time(seconds: float) -> str:
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    milliseconds = (seconds - int(seconds)) * 1000
+    return f"{int(hours)}h {int(minutes)}m {int(seconds)}s {int(milliseconds)}ms"

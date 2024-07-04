@@ -29,6 +29,8 @@ Check heroku status
 heroku login
 
 heroku logs --tail
+
+# check the status of the dynos
 heroku ps
 
 heroku logs --tail --ps worker

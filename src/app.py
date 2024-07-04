@@ -1,9 +1,10 @@
 import logging
 import os
 import time
+import ssl
 
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, redirect
 
 from src.summariser import summarise_webpage
 from src.utils import format_elapsed_time
@@ -22,7 +23,7 @@ logging.basicConfig(
 # load the keys in .env
 load_dotenv()
 
-# Celery instance
+# CELERY instance
 redis_url = os.getenv(
     "REDIS_URL", "redis://localhost:6379/0"
 )  # Default to local Redis if REDIS_URL is not set
@@ -31,7 +32,11 @@ app.config["broker_url"] = redis_url
 app.config["result_backend"] = redis_url
 
 celery = Celery(app.name, broker=redis_url)
-celery.conf.update(app.config)
+celery.conf.update(
+    app.config,
+    broker_use_ssl={"ssl_cert_reqs": ssl.CERT_NONE},
+    redis_backend_use_ssl={"ssl_cert_reqs": ssl.CERT_NONE},
+)
 
 # Set the broker_connection_retry_on_startup configuration setting
 celery.conf.broker_connection_retry_on_startup = True
@@ -41,6 +46,11 @@ celery.conf.broker_connection_retry_on_startup = True
 @app.route("/", methods=["GET"])
 def homepage():
     return render_template("index.html")
+
+
+@app.route("/flower")
+def flower():
+    return redirect("http://localhost:5555")
 
 
 @app.route("/webhook", methods=["POST"])

@@ -26,6 +26,7 @@ load_dotenv()
 redis_url = os.getenv(
     "REDIS_URL", "redis://localhost:6379/0"
 )  # Default to local Redis if REDIS_URL is not set
+
 app.config["broker_url"] = redis_url
 app.config["result_backend"] = redis_url
 
@@ -52,7 +53,6 @@ def webhook() -> str:
         f"\nNEW MESSAGE\nRecieved message [FROM {from_number} -- TO {to_number}]: {incoming_msg}"
     )
 
-    # REMOVE
     # Start the asynchronous task
     process_message_async.delay(
         incoming_msg=incoming_msg, user_number=from_number, twilio_number=to_number
@@ -92,6 +92,7 @@ def process_message_async(
             logging.debug(f"Summary of webpage:\n{summary}")
 
             # send message FROM the Twilio number TO the user
+            # split into 1600 character parts
             max_length = 1600
             summary_parts = [
                 summary[i : i + max_length] for i in range(0, len(summary), max_length)

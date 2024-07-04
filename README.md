@@ -34,6 +34,13 @@ heroku ps
 heroku logs --tail --ps worker
 ```
 
+Create bash session in the virtual machine
+```
+heroku run bash
+
+$ celery -A src.app.celery status
+```
+
 ## Setup
 
 1. Clone the repository:

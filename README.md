@@ -9,6 +9,9 @@ This project is a WhatsApp chatbot that uses the Cohere Command R+ model to summ
 - Deployed on Heroku.
 
 ## Deployment
+![Facebook Whatsapp Manager](src/static/facebook_whatsapp.png)
+![Verification of whatsapp](src/static/whatsapp_verification.png)
+[Connection to Whatsapp via twilio](https://www.twilio.com/docs/whatsapp/self-sign-up)
 
 Deployed [here](https://stormy-fortress-61944-2c1ff9dc107f.herokuapp.com/) on Heroku.
 ```
@@ -17,6 +20,7 @@ heroku addons:info redis-pointy-97986
 ```
 
 ## Monitoring
+
 
 - [Heroku](https://dashboard.heroku.com/apps/stormy-fortress-61944)
 - [Twilio Whatsapp Senders](https://console.twilio.com/us1/develop/sms/senders/whatsapp-senders/XE2357b321ff41b31f05ca6b44fd626c5d)

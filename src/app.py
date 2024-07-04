@@ -52,11 +52,17 @@ def homepage():
 def webhook() -> str:
     # get the incoming message
     incoming_msg = request.values.get("Body", "").strip()
-    from_number = request.values.get("From", "").replace("whatsapp:", "")
-    logging.debug(f"\nNEW MESSAGE\nRecieved message [{from_number}]: {incoming_msg}")
+    from_number = request.values.get("From", "")  # .replace("whatsapp:", "")
+    to_number = request.values.get("To", "")  # .replace("whatsapp:", "")
+    logging.debug(
+        f"\nNEW MESSAGE\nRecieved message [FROM {from_number} -- TO {to_number}]: {incoming_msg}"
+    )
 
+    # REMOVE
     # Start the asynchronous task
-    process_message_async.delay(incoming_msg, from_number)
+    process_message_async.delay(
+        incoming_msg=incoming_msg, user_number=from_number, twilio_number=to_number
+    )
 
     # Respond immediately with 202 Accepted
     return "", 202
@@ -65,33 +71,22 @@ def webhook() -> str:
 @celery.task
 def process_message_async(
     incoming_msg: str,
-    from_number: str,
+    user_number: str,
+    twilio_number: str,
 ) -> str:
-
     # Setup API keys
     twilio_account_sid = os.getenv("TWILIO_ACCOUNT_SID")
     twilio_auth_token = os.getenv("TWILIO_AUTH_TOKEN")
-    twilio_phone_number = os.getenv("TWILIO_PHONE_NUMBER")
 
     # Twilio REST API client
     client = Client(twilio_account_sid, twilio_auth_token)
 
     logging.debug(
-        f"process_message_async(\nfrom_number={from_number},\nincoming_msg={incoming_msg}\n)\nclient == {client}"
+        f"process_message_async(\nuser_number={user_number},\nincoming_msg={incoming_msg}\n)\nclient == {client}"
     )
 
     # initialise timer
     start_time = time.time()
-
-    # initialise conversation
-    conversation_sid, client = get_or_create_conversation(client=client)
-    print(conversation_sid, client)
-    client = add_participant_to_client(
-        client=client,
-        conversation_sid=conversation_sid,
-        participant_phone=from_number,
-        twilio_phone_number=twilio_phone_number,
-    )
 
     if (
         (incoming_msg.startswith("@summarise"))
@@ -102,29 +97,34 @@ def process_message_async(
             summary = summarise_webpage(incoming_msg)
             logging.debug(f"Summary of webpage:\n{summary}")
 
-            # Send the summary via Twilio API
-            client = send_message_to_conversation(
-                client, conversation_sid=conversation_sid, message=summary
-            )
-            # client.messages.create(
-            #     body=summary,
-            #     from_=twilio_phone_number,
-            #     to=from_number,
-            # )
+            # # how long did response take?
+            # cohere_response_time = time.time()
+            # elapsed_time = cohere_response_time - start_time
+            # human_readable_time = format_elapsed_time(elapsed_time)
+            # # concatenate the response time to the summary
+            # summary += f"\n\nResponse time: {human_readable_time}"
+
+            # send message FROM the Twilio number TO the user
+            max_length = 1600
+            summary_parts = [
+                summary[i : i + max_length] for i in range(0, len(summary), max_length)
+            ]
+
+            for part in summary_parts:
+                client.messages.create(body=part, from_=twilio_number, to=user_number)
+
+            # client.messages.create(body=summary, from_=twilio_number, to=user_number)
 
             logging.debug(f"Message sent to twilio: `message.body(summary)`")
 
         except Exception as e:
             logging.error(f"Error: {e}")
-            # client.messages.create(
-            #     body="An error occured while summarising the webpage.",
-            #     from_=twilio_phone_number,
-            #     to=from_number,
-            # )
-            client = send_message_to_conversation(
-                client,
-                conversation_sid=conversation_sid,
-                message="An error occured while summarising the webpage.",
+
+            # send message FROM the Twilio number TO the user
+            client.messages.create(
+                body=f"An error occured while summarising the webpage.\n{e}",
+                from_=twilio_number,
+                to=user_number,
             )
 
         # end the timer
@@ -133,10 +133,6 @@ def process_message_async(
         human_readable_time = format_elapsed_time(elapsed_time)
         logging.debug(f"Function finished: {human_readable_time}")
 
-        # # Check the response
-        # response = client.messages.body
-        # logging.debug(f"Return MessagingResponse: \n`str({response})`")
-        # return str(response)
         return "Success!"
     else:
         logging.warning(f"Recieved an invalid command: {incoming_msg}")

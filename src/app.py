@@ -4,15 +4,9 @@ import time
 
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, send_from_directory
-from twilio.twiml.messaging_response import MessagingResponse
 
 from src.summariser import summarise_webpage
 from src.utils import format_elapsed_time
-from src.twilio_utils import (
-    get_or_create_conversation,
-    add_participant_to_client,
-    send_message_to_conversation,
-)
 from twilio.rest import Client
 from celery import Celery
 
@@ -52,8 +46,8 @@ def homepage():
 def webhook() -> str:
     # get the incoming message
     incoming_msg = request.values.get("Body", "").strip()
-    from_number = request.values.get("From", "")  # .replace("whatsapp:", "")
-    to_number = request.values.get("To", "")  # .replace("whatsapp:", "")
+    from_number = request.values.get("From", "")
+    to_number = request.values.get("To", "")
     logging.debug(
         f"\nNEW MESSAGE\nRecieved message [FROM {from_number} -- TO {to_number}]: {incoming_msg}"
     )
@@ -97,13 +91,6 @@ def process_message_async(
             summary = summarise_webpage(incoming_msg)
             logging.debug(f"Summary of webpage:\n{summary}")
 
-            # # how long did response take?
-            # cohere_response_time = time.time()
-            # elapsed_time = cohere_response_time - start_time
-            # human_readable_time = format_elapsed_time(elapsed_time)
-            # # concatenate the response time to the summary
-            # summary += f"\n\nResponse time: {human_readable_time}"
-
             # send message FROM the Twilio number TO the user
             max_length = 1600
             summary_parts = [
@@ -112,8 +99,6 @@ def process_message_async(
 
             for part in summary_parts:
                 client.messages.create(body=part, from_=twilio_number, to=user_number)
-
-            # client.messages.create(body=summary, from_=twilio_number, to=user_number)
 
             logging.debug(f"Message sent to twilio: `message.body(summary)`")
 

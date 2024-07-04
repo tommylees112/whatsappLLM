@@ -26,8 +26,12 @@ heroku addons:info redis-pointy-97986
 
 Check heroku status
 ```bash
+heroku login
+
 heroku logs --tail
 heroku ps
+
+heroku logs --tail --ps worker
 ```
 
 ## Setup

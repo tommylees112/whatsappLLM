@@ -1,4 +1,4 @@
 .keys.sh
 .env
 __pycache__ 
-
+.vscode

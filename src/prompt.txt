@@ -3,6 +3,8 @@ I need you to summarize an article and extract the most controversial informatio
 
 If the link points to a podcast transcript, make sure that you focus on the transcript and give timestamps relating to the quotes you use. Ignore the introduction to the podcast episode. 
 
+If the link does not work first time, please try removing the `https://` component and start with `www`
+
 I expect the response to:
 * be concise (150 words)
 * contain quotes from the text
@@ -10,3 +12,8 @@ I expect the response to:
 * number each key point so they can be addressed and referred to separately
 * format the quotes using italics.
 * ensure that punctuation is correct. Only use brackets if appropriate or used in the original text (sometimes the brackets are used for other links. Include those other links but don't count them towards the 150 words)
+
+If you cannot summarize the URL please respond with the following formatted message:
+```
+Sorry, I can't access that URL [{URL}]. Please check the link and try again.
+```

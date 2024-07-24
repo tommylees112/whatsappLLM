@@ -2,8 +2,17 @@ import cohere
 from cohere.types.non_streamed_chat_response import NonStreamedChatResponse
 from src.utils import get_cohere_api_key
 import logging
+from langchain_community.document_loaders import WebBaseLoader
+import re
+from langchain_core.documents.base import Document
 
 logger = logging.getLogger(__name__)
+
+
+def extract_urls(text):
+    url_pattern = re.compile(r"(https?://\S+|www\.\S+)")
+    urls = url_pattern.findall(text)
+    return urls
 
 
 def read_prompt_header() -> str:
@@ -11,6 +20,28 @@ def read_prompt_header() -> str:
     with open("src/prompt.txt", "r") as file:
         prompt_header = file.read()
     return prompt_header
+
+
+def langchain_webcontent(message: str) -> str:
+    """Load the text from the url stored inside message
+
+    Args:
+        message (str): _description_
+
+    Returns:
+        str: _description_
+    """
+    url = extract_urls(message)
+
+    logger.debug(f"Extract url from message: {message}\nURL: {url}")
+
+    loader = WebBaseLoader(url)
+    data = loader.load()
+
+    assert len(data) == 1, "Only one value in array should be returned"
+    data: Document = data[0]
+
+    return str(data)
 
 
 def cohere_summarise(message: str) -> NonStreamedChatResponse:
@@ -27,7 +58,6 @@ def cohere_summarise(message: str) -> NonStreamedChatResponse:
         model="command-r-plus",
         temperature=0.5,
         preamble=prompt_header,
-        connectors=[{"id": "web-search"}],
     )
 
     logger.debug(f"Response from Cohere AI:\n{response.text}")
@@ -36,15 +66,19 @@ def cohere_summarise(message: str) -> NonStreamedChatResponse:
 
 
 def summarise_webpage(url: str) -> str:
-    # html_text = get_html_from_url(url)
-    cohere_response: NonStreamedChatResponse = cohere_summarise(url)
+    html_text = langchain_webcontent(url)
+    cohere_response: NonStreamedChatResponse = cohere_summarise(html_text)
     text: str = cohere_response.text
     return text
 
 
 if __name__ == "__main__":
-    url = "https://samharris.substack.com/p/october-7?utm_source=substack&publication_id=471923&post_id=145856573&utm_medium=email&utm_content=share&utm_campaign=email-share&triggerShare=true&isFreemail=true&r=1s4h2t&triedRedirect=true"
     url = "https://conversationswithtyler.com/episodes/nassim-nicholas-taleb-and-bryan-caplan/"
+    url = "https://samharris.substack.com/p/october-7?utm_source=substack&publication_id=471923&post_id=145856573&utm_medium=email&utm_content=share&utm_campaign=email-share&triggerShare=true&isFreemail=true&r=1s4h2t&triedRedirect=true"
+    url = "https://www.restorationbulletin.com/p/standing-on-a-slackline-giorgia-meloni"
+    url = "http://www.restorationbulletin.com/p/standing-on-a-slackline-giorgia-meloni"
+    url = "https://www.bitsaboutmoney.com/archive/working-title-insurance/"
+    url = "https://www.complexsystemspodcast.com/episodes/teaching-trading-ricki-heicklen/"
 
     incoming_msg = f"@summarise {url}"
     summary = summarise_webpage(incoming_msg)

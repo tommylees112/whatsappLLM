@@ -87,7 +87,7 @@ def webhook() -> Tuple[str, int]:
     )
 
     # Start the asynchronous task
-    process_message_async.delay(
+    process_message_async.delay(  # type: ignore
         incoming_msg=incoming_msg, user_number=from_number, twilio_number=to_number
     )
 

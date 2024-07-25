@@ -14,3 +14,7 @@ repos:
       - id: black
         args: [--fast]  # Use the fast mode of Black
         additional_dependencies: [click==8.0.4]  # Use specific version of click
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.373  # Use the latest Pyright version
+    hooks:
+      - id: pyright

@@ -90,7 +90,6 @@ def webhook() -> Tuple[str, int]:
     process_message_async.delay(
         incoming_msg=incoming_msg, user_number=from_number, twilio_number=to_number
     )
-    print("GOT HERE")
 
     # Respond immediately with 202 Accepted
     return "", 202

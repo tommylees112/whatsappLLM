@@ -21,7 +21,6 @@ heroku addons:info redis-pointy-97986
 
 ## Monitoring
 
-
 - [Heroku](https://dashboard.heroku.com/apps/stormy-fortress-61944)
 - [Twilio Whatsapp Senders](https://console.twilio.com/us1/develop/sms/senders/whatsapp-senders/XE2357b321ff41b31f05ca6b44fd626c5d)
 - [Twilio SMS Logs](https://console.twilio.com/us1/monitor/logs/sms)

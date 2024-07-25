@@ -1,7 +1,7 @@
 import os
 import time
 import sys
-
+import ssl
 from dotenv import load_dotenv
 from flask import (
     Flask,
@@ -43,6 +43,8 @@ app.config["result_backend"] = redis_url
 celery = Celery(app.name, broker=redis_url)
 celery.conf.update(
     app.config,
+    broker_use_ssl={"ssl_cert_reqs": ssl.CERT_NONE},
+    redis_backend_use_ssl={"ssl_cert_reqs": ssl.CERT_NONE},
 )
 
 # Set the broker_connection_retry_on_startup configuration setting

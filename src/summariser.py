@@ -1,14 +1,11 @@
 import cohere
 from cohere.types.non_streamed_chat_response import NonStreamedChatResponse
 from src.utils import get_cohere_api_key
-import logging
 from langchain_community.document_loaders import WebBaseLoader
 import re
 from langchain_core.documents.base import Document
 from typing import List
-
-
-logger = logging.getLogger(__name__)
+from loguru import logger
 
 
 def extract_urls(text: str) -> List[str]:
@@ -75,7 +72,8 @@ def cohere_summarise(message: str) -> NonStreamedChatResponse:
     co = cohere.Client(get_cohere_api_key())
 
     # Start a new conversation with the LLM
-    logger.debug(f"Message to Cohere AI:\n{message}")
+    debug_message = message.replace("\n", "").replace("\r", "")
+    logger.debug(f"Message to Cohere AI:\n{debug_message}")
 
     response = co.chat(
         message=message,
@@ -108,7 +106,6 @@ if __name__ == "__main__":
     url = "https://conversationswithtyler.com/episodes/nassim-nicholas-taleb-and-bryan-caplan/"
     url = "https://samharris.substack.com/p/october-7?utm_source=substack&publication_id=471923&post_id=145856573&utm_medium=email&utm_content=share&utm_campaign=email-share&triggerShare=true&isFreemail=true&r=1s4h2t&triedRedirect=true"
     url = "https://www.restorationbulletin.com/p/standing-on-a-slackline-giorgia-meloni"
-    url = "http://www.restorationbulletin.com/p/standing-on-a-slackline-giorgia-meloni"
     url = "https://www.bitsaboutmoney.com/archive/working-title-insurance/"
     url = "https://www.complexsystemspodcast.com/episodes/teaching-trading-ricki-heicklen/"
 

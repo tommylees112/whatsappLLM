@@ -74,9 +74,14 @@ $ celery -A src.app.celery status
    ```bash
    brew services start redis
    redis-cli ping
+
+   redis-server
    ```
 
 5. Start the celeery worker
    ```
-   celery -A src.app.celery worker --loglevel=info
+   celery -A src.app.celery worker --loglevel=debug
+
+
+   celery -A src.app.celery inspect ping
    ```

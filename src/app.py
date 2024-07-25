@@ -4,7 +4,14 @@ import time
 import ssl
 
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, send_from_directory, redirect
+from flask import (
+    Flask,
+    render_template,
+    request,
+    send_from_directory,
+    redirect,
+    Response,
+)
 
 from src.summariser import summarise_webpage
 from src.utils import format_elapsed_time
@@ -44,12 +51,12 @@ celery.conf.broker_connection_retry_on_startup = True
 
 # Routes
 @app.route("/", methods=["GET"])
-def homepage():
+def homepage() -> str:
     return render_template("index.html")
 
 
 @app.route("/flower")
-def flower():
+def flower() -> Response:
     return redirect("http://localhost:5555")
 
 
@@ -111,7 +118,7 @@ def process_message_async(
             for part in summary_parts:
                 client.messages.create(body=part, from_=twilio_number, to=user_number)
 
-            logging.debug(f"Message sent to twilio: `message.body(summary)`")
+            logging.debug("Message sent to twilio: `message.body(summary)`")
 
         except Exception as e:
             logging.error(f"Error: {e}")
@@ -136,7 +143,7 @@ def process_message_async(
 
 
 @app.route("/favicon.ico")
-def favicon():
+def favicon() -> Response:
     return send_from_directory(
         os.path.join(app.root_path, "static"),
         "favicon.ico",

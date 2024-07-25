@@ -5,19 +5,35 @@ import logging
 from langchain_community.document_loaders import WebBaseLoader
 import re
 from langchain_core.documents.base import Document
+from typing import List
+
 
 logger = logging.getLogger(__name__)
 
 
-def extract_urls(text):
+def extract_urls(text: str) -> List[str]:
+    """extract url string from the text using regex match on http, https, www.
+
+    Args:
+        text (str): message from the user (e.g. @summ <url>)
+
+    Returns:
+        List[str]: list of urls found
+    """
     url_pattern = re.compile(r"(https?://\S+|www\.\S+)")
     urls = url_pattern.findall(text)
     return urls
 
 
-def read_prompt_header() -> str:
+def read_prompt_header(prompt_fpath: str = "src/prompt.txt") -> str:
+    """Read the prompt header from the file
+    Passed into cohere.chat as `preamble`.
+
+    Returns:
+        str: text read from the file
+    """
     # Read the prompt from the file
-    with open("src/prompt.txt", "r") as file:
+    with open(prompt_fpath, "r") as file:
         prompt_header = file.read()
     return prompt_header
 
@@ -26,10 +42,10 @@ def langchain_webcontent(message: str) -> str:
     """Load the text from the url stored inside message
 
     Args:
-        message (str): _description_
+        message (str): "@summarise <url>"
 
     Returns:
-        str: _description_
+        str: the html text from the url
     """
     url = extract_urls(message)
 
@@ -45,6 +61,14 @@ def langchain_webcontent(message: str) -> str:
 
 
 def cohere_summarise(message: str) -> NonStreamedChatResponse:
+    """use cohere command r+ model to summarise the text.
+
+    Args:
+        message (str): message from user ('@summarize <url>')
+
+    Returns:
+        NonStreamedChatResponse: output of the command r+ model
+    """
     prompt_header = read_prompt_header()
 
     # initialise cohere
@@ -66,6 +90,14 @@ def cohere_summarise(message: str) -> NonStreamedChatResponse:
 
 
 def summarise_webpage(url: str) -> str:
+    """Summarise the webpage using Cohere AI
+
+    Args:
+        url (str): url of the webpage
+
+    Returns:
+        str: summary from Cohere AI
+    """
     html_text = langchain_webcontent(url)
     cohere_response: NonStreamedChatResponse = cohere_summarise(html_text)
     text: str = cohere_response.text

@@ -108,6 +108,7 @@ if __name__ == "__main__":
     url = "https://www.restorationbulletin.com/p/standing-on-a-slackline-giorgia-meloni"
     url = "https://www.bitsaboutmoney.com/archive/working-title-insurance/"
     url = "https://www.complexsystemspodcast.com/episodes/teaching-trading-ricki-heicklen/"
+    url = "https://peps.python.org/pep-0544/"
 
     incoming_msg = f"@summarise {url}"
     summary = summarise_webpage(incoming_msg)

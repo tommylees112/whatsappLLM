@@ -1,0 +1,70 @@
+# The "void" that D2 is adding to your function declarations is actually a default behavior in D2 when it encounters a method or function without an explicitly defined return type. Here's why this happens and how to address it:
+direction: right
+
+model: Model {
+  shape: class
+}
+
+summarizer: LLMSummarizer {
+  shape: class
+  "summarize_webpage(url: str): str"
+  "extract_urls(text: str): List[str]"
+  "read_prompt_header(): str"
+}
+
+controller: Controller {
+  shape: class
+  "process_summary_request(url: str): SummaryResponse"
+  "handle_error(error: Exception): ErrorResponse"
+}
+
+view: Views {
+  shape: package
+}
+
+cli: CLIView {
+  shape: class
+  "run()"
+  "get_input(): str"
+  "display_output(summary: str)"
+}
+
+whatsapp: WhatsAppView {
+  shape: class
+  "handle_message(message: str)"
+  "send_response(number: str, summary: str)"
+}
+
+web: WebView {
+  shape: class
+  "index()"
+  "summarize()"
+}
+
+app: app.py {
+  shape: class
+  "main()"
+  "initialize_components()"
+  "run_selected_view()"
+}
+
+external: "External Services" {
+  shape: cloud
+  cohere: "Cohere API"
+  twilio: "Twilio API"
+}
+
+model -> summarizer: contains
+view -> cli: contains
+view -> whatsapp: contains
+view -> web: contains
+
+app -> model: initializes
+app -> controller: initializes
+app -> view: initializes and runs
+controller -> summarizer: uses
+cli -> controller: uses
+whatsapp -> controller: uses
+web -> controller: uses
+summarizer -> external.cohere: calls
+whatsapp -> external.twilio: uses

@@ -1,0 +1,81 @@
+direction: right
+
+summariser: "src/summariser.py" {
+  shape: class
+
+  "extract_urls(text: str): List[str]"
+  "read_prompt_header(prompt_fpath: str): str"
+  "langchain_webcontent(message: str): str"
+  "cohere_summarise(message: str): NonStreamedChatResponse"
+  "summarise_webpage(url: str): str"
+}
+
+app: "src/app.py" {
+  shape: class
+
+  "homepage(): str"
+  "flower(): Response"
+  "webhook(): Tuple[str, int]"
+  "process_message_async(incoming_msg: str, user_number: str, twilio_number: str): str"
+  "favicon(): Response"
+}
+
+utils: "src/utils.py" {
+  shape: class
+
+  "get_cohere_api_key(): str"
+  "get_html_from_url(url: str)"
+  "format_elapsed_time(seconds: float): str"
+}
+
+external: "External Services" {
+  shape: cloud
+  cohere: "Cohere API"
+  twilio: "Twilio API"
+  redis: Redis
+}
+
+config: Configuration {
+  shape: document
+  
+  Procfile: {
+    web: "gunicorn src.app:app --workers 3"
+    worker: "celery -A src.app.celery worker --loglevel=debug"
+    flower: "celery -A src.app.celery flower --port=5555"
+  }
+
+  env: {
+    FLASK_APP: "src/app.py"
+    COHERE_API_KEY: "***"
+    TWILIO_ACCOUNT_SID: "***"
+    TWILIO_AUTH_TOKEN: "***"
+    TWILIO_PHONE_NUMBER: "+447460921387"
+    REDIS_URL: "redis://localhost:6379/0"
+  }
+
+  pre-commit: {
+    hooks: "ruff, black"
+  }
+}
+
+prompt: "src/prompt.txt" {
+  shape: document
+  content: "Instructions for summarization"
+}
+
+app -> summariser: uses
+app -> utils: uses
+summariser -> utils: uses
+app -> external.cohere: calls
+app -> external.twilio: calls
+app -> external.redis: "uses for Celery"
+app -> prompt: reads
+
+client: Client {
+  shape: person
+}
+
+client -> app: "sends request"
+app -> client: "sends response"
+
+config -> app: configures

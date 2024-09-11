@@ -1,0 +1,49 @@
+direction: right
+
+users: Users {
+  shape: person
+}
+
+cli: CLI Client {
+  shape: rectangle
+  style: {
+    stroke-dash: 5
+  }
+}
+
+whatsapp: WhatsApp {
+  shape: diamond
+}
+
+api_gateway: API Gateway {
+  shape: hexagon
+}
+
+lambda: AWS Lambda {
+  shape: rectangle
+  note: "Summarization Function"
+}
+
+dynamodb: DynamoDB {
+  shape: cylinder
+  note: "Optional: For caching summaries"
+}
+
+external_apis: External APIs {
+  shape: cloud
+  cohere: Cohere API
+  twilio: Twilio API
+}
+
+cloudwatch: CloudWatch {
+  shape: rectangle
+  note: "Monitoring & Logging"
+}
+
+users -> api_gateway: HTTPS
+cli -> api_gateway: "API requests"
+whatsapp -> api_gateway: "API requests"
+api_gateway -> lambda: "Trigger"
+lambda -> dynamodb: "Read/Write (optional)"
+lambda -> external_apis: "API calls"
+lambda -> cloudwatch: "Logs"

@@ -7,30 +7,42 @@ This file separates configuration management from the application code.
 import os
 
 from dotenv import load_dotenv
-from pydantic import Field
-from pydantic_settings import BaseSettings
 
 # Load environment variables from .env file
 load_dotenv()
 
 
-class Settings(BaseSettings):
-    # FastAPI settings
-    APP_NAME: str = "WhatsappLLM"
-    DEBUG: bool = os.getenv("DEBUG", "False").lower() == "true"
+# class Settings(BaseSettings):
+#     # FastAPI settings
+#     APP_NAME: str = "WhatsappLLM"
+#     DEBUG: bool = os.getenv("DEBUG", "False").lower() == "true"
 
-    # Twilio settings
-    TWILIO_ACCOUNT_SID: str = Field(alias="TWILIO_ACCOUNT_SID")
-    TWILIO_AUTH_TOKEN: str = Field(alias="TWILIO_AUTH_TOKEN")
-    TWILIO_PHONE_NUMBER: str = Field(alias="TWILIO_PHONE_NUMBER")
+#     # Twilio settings
+#     TWILIO_ACCOUNT_SID: str = Field(alias="TWILIO_ACCOUNT_SID")
+#     TWILIO_AUTH_TOKEN: str = Field(alias="TWILIO_AUTH_TOKEN")
+#     TWILIO_PHONE_NUMBER: str = Field(alias="TWILIO_PHONE_NUMBER")
 
-    # Cohere settings
-    COHERE_API_KEY: str = Field(alias="COHERE_API_KEY")
+#     # Cohere settings
+#     COHERE_API_KEY: str = Field(alias="COHERE_API_KEY")
 
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
-        extra = "ignore"
+
+#     class Config:
+#         env_file = ".env"
+#         case_sensitive = True
+#         extra = "ignore"
+class Settings:
+    TWILIO_ACCOUNT_SID: str | None = os.environ.get("TWILIO_ACCOUNT_SID")
+    TWILIO_AUTH_TOKEN: str | None = os.environ.get("TWILIO_AUTH_TOKEN")
+    TWILIO_PHONE_NUMBER: str | None = os.environ.get("TWILIO_PHONE_NUMBER")
+    COHERE_API_KEY: str | None = os.environ.get("COHERE_API_KEY")
+
+    def model_dump(self):
+        return {
+            "TWILIO_ACCOUNT_SID": self.TWILIO_ACCOUNT_SID,
+            "TWILIO_AUTH_TOKEN": self.TWILIO_AUTH_TOKEN,
+            "TWILIO_PHONE_NUMBER": self.TWILIO_PHONE_NUMBER,
+            "COHERE_API_KEY": self.COHERE_API_KEY,
+        }
 
 
 def get_settings() -> Settings:

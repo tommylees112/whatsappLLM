@@ -37,7 +37,14 @@ class Settings(BaseSettings):
 
 
 def get_settings() -> Settings:
-    return Settings()
+    return Settings(
+        TWILIO_ACCOUNT_SID=os.getenv("TWILIO_ACCOUNT_SID"),
+        TWILIO_AUTH_TOKEN=os.getenv("TWILIO_AUTH_TOKEN"),
+        TWILIO_PHONE_NUMBER=os.getenv("TWILIO_PHONE_NUMBER"),
+        OG_TWILIO_PHONE_NUMBER=os.getenv("OG_TWILIO_PHONE_NUMBER"),
+        MY_PHONE_NUMBER=os.getenv("MY_PHONE_NUMBER"),
+        COHERE_API_KEY=os.getenv("COHERE_API_KEY"),
+    )
 
 
 # Create a global instance of the settings

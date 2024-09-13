@@ -6,8 +6,8 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . ./
 
-# set the port to 1234
-ENV PORT 1234
+# set the port to 8080
+ENV PORT 8080
 
 # create the environment and install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt

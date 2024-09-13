@@ -24,11 +24,22 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
+      # Step 2.1: Verify Authentication [DEBUG]
+      - name: Verify Authentication
+        run: |
+          gcloud auth list
+          gcloud config list project
+  
       # Step 3: Configure Docker to use Google Cloud credentials
       - name: Configure Docker for GCR
         run: |
           gcloud auth configure-docker gcr.io
 
+      # Step 3.1: Test Docker Authentication  
+      - name: Test Docker Authentication
+        run: |
+          docker info
+  
       # Step 4: Build the Docker image
       - name: Build Docker Image
         run: |
@@ -44,13 +55,12 @@ jobs:
 
       # Step 6: Deploy to Google Cloud Run
       - name: Deploy to Cloud Run
-        uses: google-github-actions/deploy-cloudrun@v1
-        with:
-          service: whatsappllm-service                              # Your Cloud Run service name
-          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/whatsappllm:${{ github.sha }}  # Image to deploy
-          region: ${{ secrets.GCP_REGION }}                       # Deployment region
-          platform: managed                                        # Fully managed Cloud Run
-          allow_unauthenticated: true                              # Allow public access
+        run: |
+          gcloud run deploy whatsappllm-service \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/whatsappllm:${{ github.sha }} \
+            --region ${{ secrets.GCP_REGION }} \
+            --platform managed \
+            --allow-unauthenticated
 
       # Optional Step 7: Clean Up Docker Images (To save storage on the runner)
       - name: Clean Up Docker Images

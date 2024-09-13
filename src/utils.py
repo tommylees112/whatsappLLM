@@ -26,9 +26,9 @@ def append_protocol_to_url(url: str) -> str:
 
 def analyze_text(text: str, use_nltk: bool = False) -> dict:
     if use_nltk:
-        from nltk.corpus import stopwords
-        from nltk.tokenize import word_tokenize, sent_tokenize
         import nltk
+        from nltk.corpus import stopwords
+        from nltk.tokenize import sent_tokenize, word_tokenize
 
         nltk.download("stopwords")
 

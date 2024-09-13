@@ -1,11 +1,14 @@
-from fastapi import FastAPI, Depends, HTTPException, Request, Response
+import json
+import os
+
+import uvicorn
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
+from loguru import logger
 from pydantic import BaseModel, Field
+
+from src.dependencies import get_summarizer, get_twilio_service
 from src.services.summarizer import Summarizer
 from src.services.twilio import TwilioService
-from src.dependencies import get_summarizer, get_twilio_service
-from loguru import logger
-import uvicorn
-import json
 
 app = FastAPI()
 
@@ -96,4 +99,5 @@ async def webhook(
 
 if __name__ == "__main__":
     logger.info("Starting FastAPI server...")
+    port = int(os.environ.get("PORT", 8080))
     uvicorn.run("src.main:app", host="0.0.0.0", port=8000, reload=True)

@@ -44,6 +44,8 @@ This project is a WhatsApp chatbot that uses the Cohere Command R+ model to summ
 
 ## Deployment
 
+Following this [guide](https://github.com/sekR4/FastAPI-on-Google-Cloud-Run?tab=readme-ov-file)
+
 This project is set up to be deployed on Google Cloud Run. Use the following commands to build and deploy:
 
 ```bash
@@ -53,6 +55,28 @@ export PORT=1234
 export REGION="europe-west3"
 export TAG="gcr.io/$PROJECT_ID/$APP"
 docker build -t $TAG . && docker run -dp $PORT:$PORT -e PORT=$PORT $TAG
+```
+
+[Upload secrets to github](https://cli.github.com/manual/gh_secret_set)
+```bash
+gh secret set COHERE_API_KEY --body "KEY_GOES_HERE"
+gh secret set COHERE_API_KEY --body "KEY_GOES_HERE"
+gh secret set TWILIO_ACCOUNT_SID --body "KEY_GOES_HERE"
+gh secret set TWILIO_AUTH_TOKEN --body "KEY_GOES_HERE"
+gh secret set TWILIO_PHONE_NUMBER --body "KEY_GOES_HERE"
+```
+
+# See all info about the app
+```bash
+gcloud run services describe $APP --region $REGION
+
+URL=$(gcloud run services describe $APP --region $REGION --format 'value(status.url)')
+
+curl $URL
+
+gcloud run services update my-service \
+  --location=us-central1 \
+  --update-env-vars=MY_VAR=my_value,ANOTHER_VAR=another_value
 ```
 
 
@@ -78,7 +102,6 @@ To run tests, use the following command:
 ```bash
 pytest
 ```   
-
 
 ## Contributing
 

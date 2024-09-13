@@ -1,8 +1,9 @@
+import cohere
 from cohere.types.non_streamed_chat_response import NonStreamedChatResponse
+from loguru import logger
+
 from src.config import settings
 from src.utils import analyze_text
-from loguru import logger
-import cohere
 
 
 class CohereService:

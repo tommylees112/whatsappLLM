@@ -2,12 +2,12 @@
 Provide reusable components for the application.
 """
 
-from src.services.summarizer import Summarizer
-from src.services.cohere import CohereService
-from src.services.twilio import TwilioService
-from src.config import settings
 from typing import cast
 
+from src.config import settings
+from src.services.cohere import CohereService
+from src.services.summarizer import Summarizer
+from src.services.twilio import TwilioService
 
 cohere_service = CohereService(cast(str, settings.COHERE_API_KEY))
 twilio_service = TwilioService(

@@ -12,3 +12,8 @@ repos:
     rev: v1.1.373  # Use the latest Pyright version
     hooks:
       - id: pyright
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0  # Use the latest version available
+    hooks:
+      - id: isort
+        name: isort (python)

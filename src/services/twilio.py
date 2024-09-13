@@ -1,5 +1,6 @@
-from twilio.rest import Client
 from loguru import logger
+from twilio.rest import Client
+
 from src.config import settings
 from src.utils import analyze_text
 

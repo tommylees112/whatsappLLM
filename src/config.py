@@ -5,9 +5,10 @@ This file separates configuration management from the application code.
 """
 
 import os
+
 from dotenv import load_dotenv
-from pydantic_settings import BaseSettings
 from pydantic import Field
+from pydantic_settings import BaseSettings
 
 # Load environment variables from .env file
 load_dotenv()

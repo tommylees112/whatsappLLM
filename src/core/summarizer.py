@@ -1,9 +1,11 @@
+import re
+from typing import List
+
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_core.documents.base import Document
-from typing import List
 from loguru import logger
+
 from src.services.cohere import CohereService
-import re
 
 
 class Summarizer:

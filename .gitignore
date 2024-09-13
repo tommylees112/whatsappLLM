@@ -6,3 +6,4 @@ __pycache__
 d2/*.png
 .pytest_cache
 .gcloud_env.sh
+upload_secrets.sh

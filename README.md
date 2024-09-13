@@ -125,3 +125,16 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 This project is open source and available under the [MIT License](LICENSE).
+
+## CLI Option
+Hit the api using curl
+```bash
+function llm() {
+  local url=$1
+  curl -s -X 'POST' \
+    '<GCLOUD URL>/summarize' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d "{\"url\": \"$url\"}" | jq -r ".summary" | bat
+}
+```

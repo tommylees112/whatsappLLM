@@ -5,6 +5,7 @@ This file separates configuration management from the application code.
 """
 
 import os
+from typing import Optional
 
 from dotenv import load_dotenv
 
@@ -30,11 +31,13 @@ load_dotenv()
 #         env_file = ".env"
 #         case_sensitive = True
 #         extra = "ignore"
+
+
 class Settings:
-    TWILIO_ACCOUNT_SID: str | None = os.environ.get("TWILIO_ACCOUNT_SID")
-    TWILIO_AUTH_TOKEN: str | None = os.environ.get("TWILIO_AUTH_TOKEN")
-    TWILIO_PHONE_NUMBER: str | None = os.environ.get("TWILIO_PHONE_NUMBER")
-    COHERE_API_KEY: str | None = os.environ.get("COHERE_API_KEY")
+    TWILIO_ACCOUNT_SID: Optional[str] = os.environ.get("TWILIO_ACCOUNT_SID")
+    TWILIO_AUTH_TOKEN: Optional[str] = os.environ.get("TWILIO_AUTH_TOKEN")
+    TWILIO_PHONE_NUMBER: Optional[str] = os.environ.get("TWILIO_PHONE_NUMBER")
+    COHERE_API_KEY: Optional[str] = os.environ.get("COHERE_API_KEY")
 
     def model_dump(self):
         return {

@@ -29,6 +29,7 @@ This project is a WhatsApp chatbot that uses the Cohere Command R+ model to summ
    TWILIO_AUTH_TOKEN=your_twilio_auth_token
    TWILIO_PHONE_NUMBER=your_twilio_phone_number
    COHERE_API_KEY=your_cohere_api_key
+   
    ```
 
 4. Run the FastAPI server locally:

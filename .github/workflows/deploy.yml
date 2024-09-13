@@ -27,7 +27,7 @@ jobs:
       # Step 3: Configure Docker to use the Google Cloud credentials
       - name: Configure Docker
         run: |
-          gcloud auth configure-docker
+          gcloud auth configure-docker gcr.io
 
       # Step 4: Build the Docker image
       - name: Build Docker image

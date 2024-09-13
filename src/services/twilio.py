@@ -1,3 +1,5 @@
+import os
+
 from loguru import logger
 from twilio.rest import Client
 
@@ -13,7 +15,7 @@ class TwilioService:
     ):
         # Setup Twilio number
         if settings.DEBUG:
-            self.from_number = f"whatsapp:{settings.OG_TWILIO_PHONE_NUMBER}"
+            self.from_number = f"whatsapp:{os.getenv('OG_TWILIO_PHONE_NUMBER')}"
         else:
             self.from_number = f"whatsapp:{settings.TWILIO_PHONE_NUMBER}"
 
@@ -36,10 +38,12 @@ class TwilioService:
 
 
 if __name__ == "__main__":
+    import os
+
     # python -m src.services.twilio
     twilio_service = TwilioService()
     twilio_service.send_message(
-        to_number=f"whatsapp:{settings.MY_PHONE_NUMBER}",
+        to_number=f"whatsapp:{os.getenv('MY_PHONE_NUMBER')}",
         message="Hello, world!",
-        from_number=f"whatsapp:{settings.OG_TWILIO_PHONE_NUMBER}",
+        from_number=f"whatsapp:{os.getenv('OG_TWILIO_PHONE_NUMBER')}",
     )

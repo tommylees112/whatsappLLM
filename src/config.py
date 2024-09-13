@@ -24,8 +24,6 @@ class Settings(BaseSettings):
     TWILIO_ACCOUNT_SID: str = Field(..., env="TWILIO_ACCOUNT_SID")
     TWILIO_AUTH_TOKEN: str = Field(..., env="TWILIO_AUTH_TOKEN")
     TWILIO_PHONE_NUMBER: str = Field(..., env="TWILIO_PHONE_NUMBER")
-    OG_TWILIO_PHONE_NUMBER: str = Field(..., env="OG_TWILIO_PHONE_NUMBER")
-    MY_PHONE_NUMBER: str = Field(..., env="MY_PHONE_NUMBER")
 
     # Cohere settings
     COHERE_API_KEY: str = Field(..., env="COHERE_API_KEY")
@@ -41,8 +39,6 @@ def get_settings() -> Settings:
         TWILIO_ACCOUNT_SID=os.getenv("TWILIO_ACCOUNT_SID"),
         TWILIO_AUTH_TOKEN=os.getenv("TWILIO_AUTH_TOKEN"),
         TWILIO_PHONE_NUMBER=os.getenv("TWILIO_PHONE_NUMBER"),
-        OG_TWILIO_PHONE_NUMBER=os.getenv("OG_TWILIO_PHONE_NUMBER"),
-        MY_PHONE_NUMBER=os.getenv("MY_PHONE_NUMBER"),
         COHERE_API_KEY=os.getenv("COHERE_API_KEY"),
     )
 

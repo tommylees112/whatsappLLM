@@ -34,6 +34,7 @@ load_dotenv()
 
 
 class Settings:
+    DEBUG: Optional[bool] = os.getenv("DEBUG", "False").lower() == "true"
     TWILIO_ACCOUNT_SID: Optional[str] = os.environ.get("TWILIO_ACCOUNT_SID")
     TWILIO_AUTH_TOKEN: Optional[str] = os.environ.get("TWILIO_AUTH_TOKEN")
     TWILIO_PHONE_NUMBER: Optional[str] = os.environ.get("TWILIO_PHONE_NUMBER")
@@ -41,6 +42,7 @@ class Settings:
 
     def model_dump(self):
         return {
+            "DEBUG": self.DEBUG,
             "TWILIO_ACCOUNT_SID": self.TWILIO_ACCOUNT_SID,
             "TWILIO_AUTH_TOKEN": self.TWILIO_AUTH_TOKEN,
             "TWILIO_PHONE_NUMBER": self.TWILIO_PHONE_NUMBER,

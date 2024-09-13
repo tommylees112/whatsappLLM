@@ -29,7 +29,7 @@ This project is a WhatsApp chatbot that uses the Cohere Command R+ model to summ
    TWILIO_AUTH_TOKEN=your_twilio_auth_token
    TWILIO_PHONE_NUMBER=your_twilio_phone_number
    COHERE_API_KEY=your_cohere_api_key
-   
+
    ```
 
 4. Run the FastAPI server locally:
@@ -74,6 +74,14 @@ gh secret set TWILIO_AUTH_TOKEN --body "KEY_GOES_HERE"
 gh secret set TWILIO_PHONE_NUMBER --body "KEY_GOES_HERE"
 ```
 
+Add secret variables to the [google Secret Manager](https://console.cloud.google.com/security/secret-manager?referrer=search&hl=en&project=whatsappllm) and read from [`deploy.yml`](https://stackoverflow.com/questions/65857870/how-to-use-a-google-secret-in-a-deployed-cloud-run-service-managed).
+```bash
+gcloud secrets create COHERE_API_KEY --data-file=.env
+gcloud secrets create TWILIO_ACCOUNT_SID --data-file=.env
+gcloud secrets create TWILIO_AUTH_TOKEN --data-file=.env
+gcloud secrets create TWILIO_PHONE_NUMBER --data-file=.env
+```
+
 # See all info about the app
 ```bash
 gcloud run services describe $APP --region $REGION
@@ -86,7 +94,6 @@ gcloud run services update my-service \
   --location=us-central1 \
   --update-env-vars=MY_VAR=my_value,ANOTHER_VAR=another_value
 ```
-
 
 ## Monitoring
 

@@ -44,7 +44,15 @@ This project is a WhatsApp chatbot that uses the Cohere Command R+ model to summ
 
 ## Deployment
 
+If you want to test the deployment manually, follow this [guide](https://github.com/sekR4/FastAPI-on-Google-Cloud-Run?tab=readme-ov-file)
+```bash
+gcloud builds submit --tag $TAG
+gcloud run deploy $APP --image $TAG --platform managed --region $REGION --allow-unauthenticated
+```
+
 Following this [guide](https://github.com/sekR4/FastAPI-on-Google-Cloud-Run?tab=readme-ov-file)
+
+[Automatically deployed to cloudrun](https://github.com/google-github-actions/deploy-cloudrun) on push to main or dev
 
 This project is set up to be deployed on Google Cloud Run. Use the following commands to build and deploy:
 

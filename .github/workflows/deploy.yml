@@ -64,7 +64,11 @@ jobs:
             --image gcr.io/$GCP_PROJECT_ID/whatsappllm:${{ github.sha }} \
             --region $GCP_REGION \
             --platform managed \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --update-secrets=TWILIO_ACCOUNT_SID=TWILIO_ACCOUNT_SID:latest \
+            --update-secrets=TWILIO_AUTH_TOKEN=TWILIO_AUTH_TOKEN:latest \
+            --update-secrets=TWILIO_PHONE_NUMBER=TWILIO_PHONE_NUMBER:latest \
+            --update-secrets=COHERE_API_KEY=COHERE_API_KEY:latest
 
       # Optional Step 7: Clean Up Docker Images (To save storage on the runner)
       - name: Clean Up Docker Images

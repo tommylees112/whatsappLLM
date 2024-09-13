@@ -18,7 +18,6 @@ class Settings(BaseSettings):
     # FastAPI settings
     APP_NAME: str = "WhatsappLLM"
     DEBUG: bool = os.getenv("DEBUG", "False").lower() == "true"
-    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "production")
 
     # Twilio settings
     TWILIO_ACCOUNT_SID: str = Field(..., env="TWILIO_ACCOUNT_SID")

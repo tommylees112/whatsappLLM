@@ -20,12 +20,12 @@ class Settings(BaseSettings):
     DEBUG: bool = os.getenv("DEBUG", "False").lower() == "true"
 
     # Twilio settings
-    TWILIO_ACCOUNT_SID: str = Field(..., env="TWILIO_ACCOUNT_SID")
-    TWILIO_AUTH_TOKEN: str = Field(..., env="TWILIO_AUTH_TOKEN")
-    TWILIO_PHONE_NUMBER: str = Field(..., env="TWILIO_PHONE_NUMBER")
+    TWILIO_ACCOUNT_SID: str = Field(alias="TWILIO_ACCOUNT_SID")
+    TWILIO_AUTH_TOKEN: str = Field(alias="TWILIO_AUTH_TOKEN")
+    TWILIO_PHONE_NUMBER: str = Field(alias="TWILIO_PHONE_NUMBER")
 
     # Cohere settings
-    COHERE_API_KEY: str = Field(..., env="COHERE_API_KEY")
+    COHERE_API_KEY: str = Field(alias="COHERE_API_KEY")
 
     class Config:
         env_file = ".env"
@@ -35,10 +35,10 @@ class Settings(BaseSettings):
 
 def get_settings() -> Settings:
     return Settings(
-        TWILIO_ACCOUNT_SID=os.environ.get("TWILIO_ACCOUNT_SID"),
-        TWILIO_AUTH_TOKEN=os.environ.get("TWILIO_AUTH_TOKEN"),
-        TWILIO_PHONE_NUMBER=os.environ.get("TWILIO_PHONE_NUMBER"),
-        COHERE_API_KEY=os.environ.get("COHERE_API_KEY"),
+        # TWILIO_ACCOUNT_SID=os.environ.get("TWILIO_ACCOUNT_SID"),
+        # TWILIO_AUTH_TOKEN=os.environ.get("TWILIO_AUTH_TOKEN"),
+        # TWILIO_PHONE_NUMBER=os.environ.get("TWILIO_PHONE_NUMBER"),
+        # COHERE_API_KEY=os.environ.get("COHERE_API_KEY"),
     )
 
 

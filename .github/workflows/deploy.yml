@@ -1,11 +1,13 @@
-name: Deploy to Google Cloud Run
+# .github/workflows/deploy.yml
+
+name: Deploy FastAPI to Google Cloud Run
 
 on:
-  workflow_dispatch:
   push:
     branches:
-      - main
+      - main  # Triggers the workflow on pushes to the 'main' branch
       - dev
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   deploy:
@@ -13,37 +15,45 @@ jobs:
 
     steps:
       # Step 1: Checkout the repository
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up Google Cloud SDK
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+      # Step 2: Authenticate to Google Cloud
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      # Step 3: Configure Docker to use the Google Cloud credentials
-      - name: Configure Docker
+      # Step 3: Configure Docker to use Google Cloud credentials
+      - name: Configure Docker for GCR
         run: |
           gcloud auth configure-docker gcr.io
 
       # Step 4: Build the Docker image
-      - name: Build Docker image
+      - name: Build Docker Image
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/whatsappllm:$GITHUB_SHA .
-        
-      # Step 5: Push the Docker image to Google Container Registry
-      - name: Push Docker image
-        run: |
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/whatsappllm:$GITHUB_SHA
+          IMAGE=gcr.io/${{ secrets.GCP_PROJECT_ID }}/whatsappllm:${{ github.sha }}
+          docker build -t $IMAGE .
 
-      # Step 6: Deploy to Cloud Run
-      - name: Deploy to Cloud Run
+      # Step 5: Push the Docker image to GCR
+      - name: Push Docker Image to GCR
         run: |
-          gcloud run deploy whatsappllm \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/whatsappllm:$GITHUB_SHA \
-            --platform managed \
-            --region ${{ secrets.GCP_REGION }} \
-            --allow-unauthenticated
+          IMAGE=gcr.io/${{ secrets.GCP_PROJECT_ID }}/whatsappllm:${{ github.sha }}
+          docker push $IMAGE
+        # Ensure the image name matches the build step
+
+      # Step 6: Deploy to Google Cloud Run
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v1
+        with:
+          service: whatsappllm-service                              # Your Cloud Run service name
+          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/whatsappllm:${{ github.sha }}  # Image to deploy
+          region: ${{ secrets.GCP_REGION }}                       # Deployment region
+          platform: managed                                        # Fully managed Cloud Run
+          allow_unauthenticated: true                              # Allow public access
+
+      # Optional Step 7: Clean Up Docker Images (To save storage on the runner)
+      - name: Clean Up Docker Images
+        if: always()
+        run: |
+          docker image prune -f

@@ -4,3 +4,5 @@ __pycache__
 .vscode
 .ruff_cache
 d2/*.png
+.pytest_cache
+.gcloud_env.sh

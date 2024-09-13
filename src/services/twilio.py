@@ -15,6 +15,7 @@ class TwilioService:
     ):
         # Setup Twilio number
         if settings.DEBUG:
+            logger.debug(f"SENDING MSG FROM {os.getenv('OG_TWILIO_PHONE_NUMBER')}")
             self.from_number = f"whatsapp:{os.getenv('OG_TWILIO_PHONE_NUMBER')}"
         else:
             self.from_number = f"whatsapp:{settings.TWILIO_PHONE_NUMBER}"

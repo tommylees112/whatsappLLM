@@ -1,7 +1,5 @@
 import json
-import os
 
-import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from loguru import logger
 from pydantic import BaseModel, Field
@@ -95,9 +93,3 @@ async def webhook(
             return {"message": "Invalid command"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-if __name__ == "__main__":
-    logger.info("Starting FastAPI server...")
-    port = int(os.environ.get("PORT", 8080))
-    uvicorn.run("src.main:app", host="0.0.0.0", port=8000, reload=True)

@@ -13,3 +13,4 @@ python-multipart
 twilio
 uvicorn
 nltk
+fastapi[standard]

@@ -1,8 +1,11 @@
 direction: down
 
-User: "User" {
+WhatsAppUser: "WhatsApp User" {
   WhatsAppApp: "WhatsApp"
-  CLI: "CLI Tool"
+}
+
+CLIUser: "CLI User" {
+  CLI: "curl"
 }
 
 TwilioAPI: "Twilio API"
@@ -16,9 +19,12 @@ WebBaseLoader: "WebBaseLoader (LangChain)"
 CohereAPI: "Cohere API"
 WebPage: "Web Page"
 
-User -> WhatsAppApp: "Sends message with URL"
+WhatsAppUser -> WhatsAppApp: "Sends message with URL"
 WhatsAppApp -> TwilioAPI: "Message received"
-TwilioAPI -> FastAPI: "Webhook triggered"
+TwilioAPI -> FastAPI: "Webhook triggered (/webhook)"
+
+CLIUser -> FastAPI: "Sends URL to /summarize"
+
 FastAPI -> Summarizer: "Extracts URL and processes"
 Summarizer -> WebBaseLoader: "Loads content"
 WebBaseLoader -> WebPage: "Fetches page content"
@@ -27,4 +33,5 @@ CohereAPI -> Summarizer: "Returns summary"
 Summarizer -> FastAPI: "Provides summary"
 FastAPI -> TwilioAPI: "Sends summary"
 TwilioAPI -> WhatsAppApp: "Message sent"
-WhatsAppApp -> User: "Delivers summary"
+WhatsAppApp -> WhatsAppUser: "Delivers summary"
+FastAPI -> CLIUser: "Returns summary"

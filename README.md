@@ -9,6 +9,11 @@ This project is a WhatsApp chatbot that uses the Cohere Command R+ model to summ
 - Uses Cohere Command R+ model for summarization.
 - Deployed on Google Cloud Run.
 
+
+## Diagram
+
+![System Diagram](diagram.png)
+
 ## Setup
 
 1. Clone the repository:

@@ -27,6 +27,7 @@ CLIUser -> FastAPI: "Sends URL to /summarize"
 
 FastAPI -> Summarizer: "Extracts URL and processes"
 Summarizer -> WebBaseLoader: "Loads content"
+WebBaseLoader -> Summarizer: "Returns page content"
 WebBaseLoader -> WebPage: "Fetches page content"
 Summarizer -> CohereAPI: "Sends content for summarization"
 CohereAPI -> Summarizer: "Returns summary"
